@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'accueil - Monitoring et Gestion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-top: 50px;
+            font-size: 2.5em;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .link-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 200px;
+            transition: transform 0.2s;
+        }
+
+        .link-card:hover {
+            transform: scale(1.05);
+        }
+
+        .link-card img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .link-card a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Monitoring et Gestion</h1>
+    <div class="container">
+        <div class="link-card">
+            <img src="./grafana_logo_icon_171048.png" alt="Grafana Icon">
+            <a href="http://votre-url-grafana" target="_blank">Grafana</a>
+        </div>
+        <div class="link-card">
+            <img src="./elasticco_kibana_logo_icon_168223.png" alt="Kibana Icon">
+            <a href="http://votre-url-kibana" target="_blank">Kibana</a>
+        </div>
+        <div class="link-card">
+            <img src="./rundeck_logo_icon_170767.png" alt="Rundeck Icon">
+            <a href="http://votre-url-rundeck" target="_blank">Rundeck</a>
+        </div>
+    </div>
+</body>
+
+</html>
