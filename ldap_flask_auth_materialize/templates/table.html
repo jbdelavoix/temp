@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau filtrable et triable</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Materialize CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <style>
+        th {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .filter-container {
+            display: none;
+            position: absolute;
+            background: white;
+            padding: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .filter-icon {
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
+        .filter-input {
+            width: 150px;
+        }
+
+        .sort-arrow {
+            font-size: 16px;
+            vertical-align: middle;
+            margin-left: 3px;
+        }
+    </style>
+</head>
+
+<body class="blue-grey lighten-5">
+
+    <div class="container" id="table-section" style="margin-top: 50px;">
+        <div class="card-panel white z-depth-3">
+            <h5 class="center-align blue-text text-darken-2">Tableau triable & filtrable</h5>
+
+            <table class="highlight responsive-table centered" id="table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Nom <i class="material-icons sort-arrow" id="arrow-0">unfold_more</i>
+                            <i class="material-icons filter-icon" onclick="toggleFilter(event, 0)">search</i></th>
+                        <th onclick="sortTable(1)">Quantité <i class="material-icons sort-arrow"
+                                id="arrow-1">unfold_more</i> <i class="material-icons filter-icon"
+                                onclick="toggleFilter(event, 1)">search</i></th>
+                        <th onclick="sortTable(2)">Catégorie <i class="material-icons sort-arrow"
+                                id="arrow-2">unfold_more</i> <i class="material-icons filter-icon"
+                                onclick="toggleFilter(event, 2)">search</i></th>
+                        <th onclick="sortTable(3)">Pays <i class="material-icons sort-arrow"
+                                id="arrow-3">unfold_more</i> <i class="material-icons filter-icon"
+                                onclick="toggleFilter(event, 3)">search</i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Apple</td>
+                        <td>10</td>
+                        <td>Fruit</td>
+                        <td>USA</td>
+                    </tr>
+                    <tr>
+                        <td>Banana</td>
+                        <td>5</td>
+                        <td>Fruit</td>
+                        <td>Brazil</td>
+                    </tr>
+                    <tr>
+                        <td>Carrot</td>
+                        <td>7</td>
+                        <td>Vegetable</td>
+                        <td>France</td>
+                    </tr>
+                    <tr>
+                        <td>Date</td>
+                        <td>12</td>
+                        <td>Fruit</td>
+                        <td>Morocco</td>
+                    </tr>
+                    <tr>
+                        <td>Eggplant</td>
+                        <td>8</td>
+                        <td>Vegetable</td>
+                        <td>Italy</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Filter Box -->
+    <div id="filterBox" class="filter-container">
+        <input type="text" id="filterInput" class="filter-input" placeholder="Filtrer...">
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // Init burger menu
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elems);
+        });
+
+        let sortDirections = [null, null, null, null];
+        let currentCol = null;
+
+        function sortTable(colIndex) {
+            const table = document.getElementById("table");
+            const rows = Array.from(table.tBodies[0].rows);
+            const dir = sortDirections[colIndex] === 'asc' ? 'desc' : 'asc';
+            sortDirections[colIndex] = dir;
+
+            rows.sort((a, b) => {
+                const x = a.cells[colIndex].innerText;
+                const y = b.cells[colIndex].innerText;
+                const isNumeric = !isNaN(parseFloat(x)) && !isNaN(parseFloat(y));
+                if (isNumeric) return dir === 'asc' ? x - y : y - x;
+                return dir === 'asc' ? x.localeCompare(y) : y.localeCompare(x);
+            });
+
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+
+            // Update arrow icon
+            document.querySelectorAll(".sort-arrow").forEach(a => a.textContent = 'unfold_more');
+            const arrow = document.getElementById("arrow-" + colIndex);
+            arrow.textContent = dir === 'asc' ? 'arrow_upward' : 'arrow_downward';
+        }
+
+        const filterBox = document.getElementById("filterBox");
+        const filterInput = document.getElementById("filterInput");
+
+        function toggleFilter(event, colIndex) {
+            event.stopPropagation();
+            currentCol = colIndex;
+            const icon = event.target;
+            const rect = icon.getBoundingClientRect();
+            filterBox.style.top = (rect.bottom + window.scrollY) + "px";
+            filterBox.style.left = (rect.left + window.scrollX) + "px";
+            filterBox.style.display = "block";
+            filterInput.value = '';
+            filterInput.focus();
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!filterBox.contains(e.target) && !e.target.classList.contains('filter-icon')) {
+                filterBox.style.display = "none";
+            }
+        });
+
+        filterInput.addEventListener("keyup", () => {
+            const value = filterInput.value.toLowerCase();
+            const rows = document.querySelectorAll("#table tbody tr");
+            rows.forEach(row => {
+                const cell = row.cells[currentCol];
+                row.style.display = cell.innerText.toLowerCase().includes(value) ? "" : "none";
+            });
+        });
+    </script>
+
+</body>
+
+</html>
