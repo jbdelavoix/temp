@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="bumblebee">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HVault Licenses - {{ title }}</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white">
+    <div class="navbar bg-amber-400 shadow-sm">
+        <div class="flex-1">
+            <div class="avatar">
+                <div class="w-12">
+                    <img src="https://www.svgrepo.com/show/448679/vault.svg">
+                </div>
+            </div>
+            <a class="btn btn-ghost text-bold text-xl">HashiCorp Vault Licenses</a>
+        </div>
+        <div class="flex-none">
+            <a href="/profile" class="btn btn-ghost">
+                <i class="material-icons">account_circle</i>
+            </a>
+            <a href="/logout" class="btn btn-ghost">
+                <i class="material-icons">logout</i>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex justify-center items-center min-h-[90vh]">
+        <div class="card w-full max-w-sm shadow-lg bg-white">
+            <div class="card-body">
+                <h2 class="text-2xl font-bold text-center text-amber-600">Login</h2>
+
+                <form>
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="email" placeholder="you@example.com" class="input input-bordered" required />
+                    </div>
+
+                    <div class="form-control mb-2">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <input type="password" placeholder="••••••••" class="input input-bordered" required />
+                    </div>
+
+                    <div class="form-control mb-4 text-right">
+                        <a href="#" class="label-text-alt text-sm text-amber-600 hover:underline">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <div class="form-control">
+                        <button type="submit" class="btn bg-amber-500 hover:bg-amber-600 text-white">
+                            Login
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
