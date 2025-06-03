@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:15
+    container_name: windmill-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: windmill
+      POSTGRES_PASSWORD: windmill
+      POSTGRES_DB: windmill
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  pgbackup:
+    image: postgres:15
+    container_name: windmill-pg-dumper
+    depends_on:
+      - db
+    volumes:
+      - ./pgbackups:/backups
+    environment:
+      PGUSER: windmill
+      PGPASSWORD: windmill
+    entrypoint: >
+      bash -c 'while true; do
+        TIMESTAMP=$(date +"%F_%H-%M-%S");
+        pg_dump -h db -U $PGUSER -d windmill -F c -f /backups/windmill_$TIMESTAMP.dump &&
+        echo "✅ Backup created at $TIMESTAMP";
+        # Clean older than 100 files
+        ls -1t /backups/windmill_*.dump | tail -n +101 | xargs -r rm -f;
+        sleep 60;
+      done'
+      
+  windmill:
+    image: ghcr.io/windmill-labs/windmill:main
+    container_name: windmill
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://windmill:windmill@db:5432/windmill
+      WM_SERVER__BASE_URL: http://localhost:8000
+      WM_CORE__ADMIN_EMAIL: admin@local.local
+      WM_CORE__ADMIN_PASSWORD: changeme
+    volumes:
+      - ./windmill_data:/root/.windmill
+    restart: unless-stopped
